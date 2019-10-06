@@ -2,6 +2,8 @@ const express = require('express');
 const socketio = require('socket.io');
 const http = require('http');
 
+const { addUser, removeUser, getUser, getUsersByRoom }  = require('./Users.js');
+
 const PORT = process.env.PORT || 5000;
 
 const router = require('./router');
@@ -11,12 +13,12 @@ const server = http.createServer(app);
 const io = socketio(server);
 
 io.on('connection', (socket) => {
-  console.log(`There is a new connection`);
 
   socket.on('join', ({ name, room }, callback) => {
+    const { error, user } = addUser({ id: socket.id, name, room });
 
-    if(false) {
-      callback({ error:'There was an error.' });
+    if(error) {
+      return callback(error);
     }
   });
   
